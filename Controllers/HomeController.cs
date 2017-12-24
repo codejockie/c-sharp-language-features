@@ -1,4 +1,6 @@
 using Microsoft.AspNetCore.Mvc;
+using System;
+using System.Linq;
 using System.Collections.Generic;
 using LanguageFeatures.Models;
 
@@ -8,22 +10,23 @@ namespace LanguageFeatures.Controllers
   {
     public IActionResult Index()
     {
-      ShoppingCart cart = new ShoppingCart {
-          Products = Product.GetProducts()
-      };
-
       Product[] productArray = {
-          new Product { Name = "Kayak", Price = 275M },
-          new Product { Name = "LifeJacket", Price = 48.95M },
-          new Product { Name = "Soccer ball", Price = 19.50M },
-          new Product { Name = "Corner flag", Price = 34.95M }
+        new Product { Name = "Kayak", Price = 275M },
+        new Product { Name = "LifeJacket", Price = 48.95M },
+        new Product { Name = "Soccer ball", Price = 19.50M },
+        new Product { Name = "Corner flag", Price = 34.95M }
       };
-      decimal cartTotal = cart.TotalPrices();
-      decimal arrayTotal = productArray.FilterByPrice(20).TotalPrices();
+      
+      decimal priceFilterTotal = productArray
+                                    .Filter(p => (p?.Price ?? 0) >= 20)
+                                    .TotalPrices();
+      decimal nameFilterTotal = productArray
+                                    .Filter(p => p?.Name?[0] == 'S')
+                                    .TotalPrices();
 
       return View(new string[] {
-          $"Cart Total: {cartTotal:C2}",
-          $"Array Total: {arrayTotal:C2}" });
+          $"Price Total: {priceFilterTotal:C2}",
+          $"Name Total: {nameFilterTotal:C2}" });
     }
   }
 }
