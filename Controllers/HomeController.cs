@@ -4,20 +4,17 @@ using LanguageFeatures.Models;
 
 namespace LanguageFeatures.Controllers
 {
-    public class HomeController : Controller
+  public class HomeController : Controller
+  {
+    public IActionResult Index()
     {
-        public IActionResult Index()
-        {
-          List<string> results = new List<string>();
+      Dictionary<string, Product> products = new Dictionary<string, Product>
+      {
+        ["Kayak"] = new Product { Name = "Kayak", Price = 275M },
+        ["LifeJacket"] = new Product { Name = "LifeJacket", Price = 48.95M }
+      };
 
-          foreach (var item in Product.GetProducts())
-          {
-              string name = item?.Name ?? "<No Name>"; // Null Conditional and Null Coalescing
-              decimal? price = item?.Price ?? 0;
-              string relatedName = item?.Related?.Name ?? "<None>";
-              results.Add(string.Format($"Name: {name}, Price: {price}, Related: {relatedName}"));
-          }
-          return View(results);
-        }
+      return View(products.Keys);
     }
+  }
 }
